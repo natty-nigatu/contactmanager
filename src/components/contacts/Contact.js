@@ -2,17 +2,20 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSortDown, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faSortDown, faTimes, faPen } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 import { Consumer } from "../../context";
+import { Link } from "react-router-dom";
 
 export default class Contact extends Component {
-  state = { show: true };
+  state = { show: false };
   onShowClick = () => {
     this.setState({ show: !this.state.show });
   };
 
-  onDeleteClick = (id, dispatch) => {
+  onDeleteClick = async (id, dispatch) => {
+    await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
     dispatch({ type: "DELETE_CONTACT", payload: id });
   };
 
@@ -28,14 +31,24 @@ export default class Contact extends Component {
                 <FontAwesomeIcon
                   icon={faSortDown}
                   onClick={this.onShowClick}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", marginLeft: "0.5em" }}
                 />
-
                 <FontAwesomeIcon
                   icon={faTimes}
                   onClick={this.onDeleteClick.bind(this, id, value.dispatch)}
                   style={{ cursor: "pointer", float: "right", color: "red" }}
                 />
+                <Link to={`/contact/edit/${id}`}>
+                  <FontAwesomeIcon
+                    icon={faPen}
+                    style={{
+                      cursor: "pointer",
+                      float: "right",
+                      color: "black",
+                      marginRight: ".5em",
+                    }}
+                  />
+                </Link>
               </h4>
               {this.state.show ? (
                 <ul className="list-group">
@@ -53,5 +66,4 @@ export default class Contact extends Component {
 
 Contact.propTypes = {
   contact: PropTypes.object.isRequired,
-  deleteClickHandler: PropTypes.func.isRequired,
 };

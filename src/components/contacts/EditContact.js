@@ -4,15 +4,26 @@ import React, { Component } from "react";
 import { Consumer } from "../../context";
 import ContactInputGroup from "./ContactInputGroup";
 
-export default class AddContact extends Component {
+export default class EditContact extends Component {
   state = {
+    id: 0,
     name: "",
     email: "",
     phone: "",
     error: {},
   };
 
-  onSubmit = async (dispatch, e) => {
+  async componentDidMount() {
+    const { id } = this.props.match.params;
+
+    const res = await axios.get(
+      `https://jsonplaceholder.typicode.com/users/${id}`
+    );
+
+    const { name, email, phone } = res.data;
+    this.setState({ id, name, email, phone });
+  }
+  onSubmit = async (id, dispatch, e) => {
     e.preventDefault();
 
     let now = false;
@@ -42,13 +53,13 @@ export default class AddContact extends Component {
       phone: this.state.phone,
     };
 
-    const res = await axios.post(
-      "https://jsonplaceholder.typicode.com/users",
+    const res = await axios.put(
+      `https://jsonplaceholder.typicode.com/users/${id}`,
       contact
     );
 
     dispatch({
-      type: "ADD_CONTACT",
+      type: "EDIT_CONTACT",
       payload: res.data,
     });
 
@@ -64,15 +75,15 @@ export default class AddContact extends Component {
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
   render() {
-    const { name, email, phone, error } = this.state;
+    const { id, name, email, phone, error } = this.state;
     return (
       <Consumer>
         {(value) => {
           return (
             <div className="card mb-3">
-              <div className="card-header">Add Contact</div>
+              <div className="card-header">Edit Contact</div>
               <div className="card-body">
-                <form onSubmit={this.onSubmit.bind(this, value.dispatch)}>
+                <form onSubmit={this.onSubmit.bind(this, id, value.dispatch)}>
                   <ContactInputGroup
                     label="Name"
                     name="name"
@@ -98,7 +109,7 @@ export default class AddContact extends Component {
                   <div className="d-grid">
                     <input
                       type="submit"
-                      value="Add Contact"
+                      value="Update Contact"
                       className="btn btn-light"
                     />
                   </div>
