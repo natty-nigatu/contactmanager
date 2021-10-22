@@ -6,7 +6,7 @@ import { faHome, faPlus, faInfo } from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
   return (
-    <nav className="navbar navbar-dark bg-danger navbar-expand-md mb-3 py-0">
+    <nav className="navbar navbar-dark bg-info navbar-expand-md mb-3 py-0">
       <div className="container">
         <a className="navbar-brand" href="/">
           Contact Manager

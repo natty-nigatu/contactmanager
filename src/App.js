@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+//import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
 import Contacts from "./components/contacts/Contacts";
 import Header from "./components/layout/Header";
 import AddContact from "./components/contacts/AddContact";
 import EditContact from "./components/contacts/EditContact";
-import About from './components/pages/About'
+import About from "./components/pages/About";
 
 import { Provider } from "./context";
 
@@ -17,7 +18,7 @@ class App extends Component {
   render() {
     return (
       <Provider>
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
           <div className="App">
             <Header />
             <div className="container">
